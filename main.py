@@ -1,7 +1,7 @@
 from flask import Flask, jsonify, request, render_template
 from utils.data_loader import load_tick_data
-from utils.aggregations import sightings_per_region, weekly_trends, monthly_trends,species_count_by_city, species_by_location
-import pandas as pd
+from utils.aggregations import (sightings_per_region, yearly_trends, weekly_trends,
+                                monthly_trends,species_count_by_location, filter_data, species_by_location)
 
 app = Flask(__name__)
 
@@ -9,31 +9,22 @@ df = load_tick_data()
 
 @app.route("/")
 def home():
-    return {"message": "Elanco Tick Sighting API is running!"}
+    return {"message": "API is running!"}
 
 @app.route("/sightings", methods=["GET"])
 def get_sightings():
     return jsonify(df.to_dict(orient="records"))
 
 @app.route("/filter", methods=["GET"])
-def filter_data():
-    df_copy = df.copy()
+def filter():
 
     start = request.args.get("start")
     end = request.args.get("end")
-
     location = request.args.get("location")
-    df_copy["date"] = pd.to_datetime(df_copy["date"], errors="coerce")
 
+    filter_df = filter_data(df, start, end, location)
 
-    if start:
-        df_copy = df_copy[df_copy["date"] >= pd.to_datetime(start)]
-    if end:
-        df_copy = df_copy[df_copy["date"] <= pd.to_datetime(end)]
-    if location:
-        df_copy = df_copy[df_copy["location"].str.lower() == location.strip().lower()]
-
-    return jsonify(df_copy.to_dict(orient="records"))
+    return jsonify(filter_df.to_dict(orient="records"))
 
 @app.route("/stats/regions")
 def region_stats():
@@ -45,7 +36,10 @@ def trends():
 
 @app.route("/dashboard-data")
 def dashboard_data():
-    return { "monthly": monthly_trends(df), "weekly": weekly_trends(df), "regions": sightings_per_region(df) }
+
+    return { "weekly": weekly_trends(df), "monthly": monthly_trends(df),
+             "yearly": yearly_trends(df), "regions": sightings_per_region(df)}
+
 
 @app.route("/stats/species", methods=["GET"])
 def species_stats():
@@ -66,9 +60,7 @@ def species_stats():
 
 @app.route("/stats/cities")
 def city_stats():
-    return jsonify(species_count_by_city(df))
-
-
+    return jsonify(species_count_by_location(df))
 
 if __name__ == "__main__":
     app.run(debug=True)
