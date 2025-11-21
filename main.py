@@ -39,7 +39,7 @@ def location_stats_aggregate():
 def dashboard_data():
 
     return { "weekly": weekly_trends(df), "monthly": monthly_trends(df),
-             "yearly": yearly_trends(df), "regions": sightings_per_location_aggregate(df)}
+             "yearly": yearly_trends(df)}
 
 
 @app.route("/stats/location-species", methods=["GET"])

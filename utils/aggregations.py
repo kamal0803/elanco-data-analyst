@@ -20,8 +20,23 @@ def filter_data(df, start=None, end=None, location=None):
             return {"error": "Invalid end date format. Use YYYY-MM-DD"}, None
 
         df_copy = df_copy[df_copy["date"] <= end_date]
+
     if location:
-        df_copy = df_copy[df_copy["location"].str.lower() == location.strip().lower()]
+
+        if location.strip() == "":
+            return {"error": "No location provided. Please check again."}, None
+
+        location = location.strip().lower()
+
+        cities = [c.lower() for c in df['location'].unique()]
+
+        if location not in cities:
+            return {
+                "error": f"'{location}' is not a valid city.",
+                "valid_cities": list(df["location"].unique())
+            }, 404
+
+        df_copy = df_copy[df_copy["location"].str.lower() == location]
 
     return None, df_copy
 
