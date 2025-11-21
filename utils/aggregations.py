@@ -1,6 +1,9 @@
 import pandas as pd
+import logging
 
 def filter_data(df, start=None, end=None, location=None):
+
+    logging.info("Running filter_data()")
 
     df_copy = df.copy()
     df_copy["date"] = pd.to_datetime(df_copy["date"], errors="coerce")
@@ -9,6 +12,7 @@ def filter_data(df, start=None, end=None, location=None):
         try:
             start_date = pd.to_datetime(start, errors="raise")
         except Exception:
+            logging.error("Invalid start date format")
             return {"error": "Invalid start date format. Use YYYY-MM-DD"}, None
 
         df_copy = df_copy[df_copy["date"] >= start_date]
@@ -17,6 +21,7 @@ def filter_data(df, start=None, end=None, location=None):
         try:
             end_date = pd.to_datetime(end, errors="raise")
         except Exception:
+            logging.error("Invalid end date format")
             return {"error": "Invalid end date format. Use YYYY-MM-DD"}, None
 
         df_copy = df_copy[df_copy["date"] <= end_date]
@@ -24,6 +29,7 @@ def filter_data(df, start=None, end=None, location=None):
     if location:
 
         if location.strip() == "":
+            logging.error("Location provided is empty")
             return {"error": "No location provided. Please check again."}, None
 
         location = location.strip().lower()
@@ -31,12 +37,15 @@ def filter_data(df, start=None, end=None, location=None):
         cities = [c.lower() for c in df['location'].unique()]
 
         if location not in cities:
+            logging.error(f"Invalid location: {location}")
             return {
                 "error": f"'{location}' is not a valid city.",
                 "valid_cities": list(df["location"].unique())
             }, 404
 
         df_copy = df_copy[df_copy["location"].str.lower() == location]
+
+    logging.info("filter_data() completed")
 
     return None, df_copy
 
@@ -91,7 +100,10 @@ def yearly_trends(df):
 
 def species_by_each_location(df, location):
 
+    logging.info("Running species_by_each_location()")
+
     if location is None or location.strip() == "":
+        logging.error("Location provided is empty")
         return {"error": "No location provided. Please provide a location"}, 400
 
     location = location.strip().lower()
@@ -99,7 +111,9 @@ def species_by_each_location(df, location):
     cities = [c.lower() for c in df['location'].unique()]
 
     if location not in cities:
+        logging.error(f"Invalid location: {location}")
         return {
+
             "error": f"'{location}' is not a valid city.",
             "valid_cities": list(df["location"].unique())
         }, 404
@@ -111,6 +125,8 @@ def species_by_each_location(df, location):
         count = len(df[(df["location"].str.lower() == location) &
                        (df["species"] == sp)])
         d[sp] = count
+
+    logging.info("species_by_each_location() completed")
 
     return d, 200
 
