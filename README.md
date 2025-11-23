@@ -67,8 +67,8 @@ Returns the count of each species across all locations.
 
 ### Steps to run in the terminal
 - git clone https://github.com/kamal0803/elanco-data-analyst
-- cd /elanco-data-analyst
-- pip install - r requirements.txt
+- cd elanco-data-analyst
+- pip install -r requirements.txt
 - python main.py
 
 The front-end UI is accessible at `http://127.0.0.1:5000`
