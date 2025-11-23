@@ -32,31 +32,56 @@ A robust error handling mechanism is implemented to catch errors such as invalid
 
 In the utils/ module, several data cleaning operations are performed:
 
-- Filling missing species/Latin names using dictionary mapping, filling missing values of location by probability distribution, dropping missing dates
+- The dataset may contain several missing fields such as _species_, _Latin names_, _locations_, and _dates_. Each type of missing value is handled using an appropriate strategy.
+  - Missing Species / Latin Names
+    - A dictionary is created for mapping species with their corresponding Latin names.
+    - Any missing value is filled based on the dictionary to ensure internal consistency.
+  - Missing Locations
+    - Location values are imputed using a probability-based approach by calculating the frequency distribution of existing locations.
+    - Each missing location is filled by random sampling from this distribution.
+  - Missing date
+    - Since the data is very sparse, it’s challenging to estimate date values for missing values, removal is the safest option. Following common data quality guidance, if fewer than 5% of rows have missing values for a critical field, it is generally acceptable to drop them.
 - Chunking to handle large datasets (soft implementation)
 - Removing duplicates
 
 
 ## Endpoints
 
-GET `/sightings`
+GET `/sightings` <br />
 Returns the complete tick-sightings dataset in JSON format.
 
-GET `/filter?start=YYYY-MM-DD&end=YYYY-MM-DD&location=location`
+GET `/filter?start=YYYY-MM-DD&end=YYYY-MM-DD&location=location` <br />
 It accepts 3 optional parameters of start date, end date and location, and returns a filtered subset of the dataset. A robust error handling is implemented to display error messages and status code when encountered.
 
-GET `/stats/locations`
+GET `/stats/locations` <br />
 Returns aggregated sighting counts per location.
 
-GET `/trends`
+GET `/trends` <br />
 Returns a JSON object containing weekly trends, monthly trends and yearly trends.
 
-GET `/stats/location-species?location=location`
+GET `/stats/location-species?location=location` <br />
 It accepts a mandatory location as parameter. Returns species-level counts for the given location.
 
-GET `/stats/all-location-species`
+GET `/stats/all-location-species` <br />
 Returns the count of each species across all locations.
 
+## AI/ML Insights (Extension Task)
+
+### Machine Learning model to predict ticks for the upcoming weeks
+A machine learning model is built to predict ticks for any location for upcoming n-weeks. Since the data is very sparse, ARIMA (Autoregressive Integrated Moving Average) is preferred over Deep Learning, which is the usual choice for time-series data. 
+
+Deep Learning methods are data hungry algorithms, requiring large volumes of data. ARIMA, on the other hand, works extremely well on small time series, capturing trends with minimal data.
+
+For this task, ARIMA provides a practical and accurate solution, with very low MAE (Mean Absolute Error) on training data.
+
+### Use of MLFlow
+MLflow is a state-of-the-art platform for tracking machine learning experiments. It allows logging model parameters, metrics, artifacts, and comparing multiple runs through an intuitive UI. This makes it easy to evaluate different model configurations and identify which version of the model performs best.
+
+In this project, MLflow is used to compare how variations in ARIMA hyperparameters (p, d, q) influence forecasting accuracy. By logging metrics such as MAE and MSE across several runs, MLflow provides a clear, visual way to understand which configuration offers the strongest predictive performance.
+
+In principle, MLflow plays a key role in enabling MLOps practices such as experiment tracking, reproducibility, and comparison across model versions.
+
+Currently, the ML model is kept outside the main API to keep the backend service lightweight and focused, and to support independent experimentation in line with good MLOps practices. A future enhancement would be to integrate the ML model into the backend.
 
 ## How to run the project
 
@@ -76,11 +101,11 @@ The front-end UI is accessible at `http://127.0.0.1:5000`
 ## Future Enhancements (if more time was available)
 - Writing unit tests using pytest for end-to-end testing.
 - Integrating the ML model developed to predict the ticks in upcoming weeks in the backend.
-- Persistence storage using PostgreSQL to support larger datasets
+- Persistence storage using databases such as PostgreSQL to support larger datasets.
 - Apply more MLOps principles by
   - Setting up a CI/CD pipeline using Github actions to automate workflows.
   - Package the entire application using Docker, and integrate it with MLFlow by running MLFlow tracking server in Docker.
-  - Deploying the models in AWS Sagemaker/Google Cloud/Microsoft Azure.
+  - Deploying the models in the cloud.
 
 ## References
 
