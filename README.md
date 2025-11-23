@@ -78,9 +78,9 @@ The front-end UI is accessible at `http://127.0.0.1:5000`
 - Integrating the ML model developed to predict the ticks in upcoming weeks in the backend.
 - Persistence storage using PostgreSQL to support larger datasets
 - Apply more MLOps principles by
-  -- Setting up a CI/CD pipeline using Github actions to automate workflows.
-  -- Package the entire application using Docker, and integrate it with MLFlow by running MLFlow tracking server in Docker.
-  -- Deploying the models in AWS Sagemaker/Google Cloud/Microsoft Azure.
+  - Setting up a CI/CD pipeline using Github actions to automate workflows.
+  - Package the entire application using Docker, and integrate it with MLFlow by running MLFlow tracking server in Docker.
+  - Deploying the models in AWS Sagemaker/Google Cloud/Microsoft Azure.
 
 ## References
 
@@ -96,7 +96,3 @@ I have previously developed backend and data-processing applications using Flask
 - Flask Movie App - https://github.com/kamal0803/flask-top-movies-app
 - Flask Cafe App - https://github.com/kamal0803/flask-cafe-application
 - Node.js Travel Tracker - https://github.com/kamal0803/Travel-Tracker
-
-
-GET `/stats/all-locations-species`
-Returns a JSON object showing the count of each species across all locations.
