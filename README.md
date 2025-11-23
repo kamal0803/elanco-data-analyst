@@ -1,4 +1,4 @@
-# Elanco Placement Program: Technical Task - Backend
+# Elanco Placement Program: Technical Task - MVP Backend
 
 This project involves developing a backend MVP with Python and Flask to process and serve tick-sighting data provided by Elanco.
 
@@ -32,9 +32,9 @@ A robust error handling mechanism is implemented to catch errors such as invalid
 
 In the utils/ module, several data cleaning operations are performed:
 
-a. Filling missing species/Latin names using dictionary mapping, filling missing values of location by probability distribution, dropping missing dates
-b. Chunking to handle large datasets (soft implementation)
-c. Removing duplicates
+- Filling missing species/Latin names using dictionary mapping, filling missing values of location by probability distribution, dropping missing dates
+- Chunking to handle large datasets (soft implementation)
+- Removing duplicates
 
 
 ## Endpoints
@@ -53,6 +53,50 @@ Returns a JSON object containing weekly trends, monthly trends and yearly trends
 
 GET `/stats/location-species?location=location`
 It accepts a mandatory location as parameter. Returns species-level counts for the given location.
+
+GET `/stats/all-location-species`
+Returns the count of each species across all locations.
+
+
+## How to run the project
+
+### Prerequisites
+- Python 3.9+
+- pip installed
+- Virtual environment (recommended)
+
+### Steps to run in the terminal
+- git clone https://github.com/kamal0803/elanco-data-analyst
+- cd /elanco-data-analyst
+- pip install - r requirements.txt
+- python main.py
+
+The front-end UI is accessible at `http://127.0.0.1:5000`
+
+## Future Enhancements (if more time was available)
+- Writing unit tests using pytest for end-to-end testing.
+- Integrating the ML model developed to predict the ticks in upcoming weeks in the backend.
+- Persistence storage using PostgreSQL to support larger datasets
+- Apply more MLOps principles by
+  -- Setting up a CI/CD pipeline using Github actions to automate workflows.
+  -- Package the entire application using Docker, and integrate it with MLFlow by running MLFlow tracking server in Docker.
+  -- Deploying the models in AWS Sagemaker/Google Cloud/Microsoft Azure.
+
+## References
+
+- https://pandas.pydata.org/docs/user_guide/scale.html
+- System Design Interview - An Insider’s Guide by Alex Xu
+
+## Related Experience
+
+I have previously developed backend and data-processing applications using Flask, Pandas, and REST APIs, which strengthened my skills in API design, data validation, and clean backend architecture. This experience directly contributed to how I structured the Elanco MVP backend.
+
+### Relevant Github projects
+
+- Flask Movie App - https://github.com/kamal0803/flask-top-movies-app
+- Flask Cafe App - https://github.com/kamal0803/flask-cafe-application
+- Node.js Travel Tracker - https://github.com/kamal0803/Travel-Tracker
+
 
 GET `/stats/all-locations-species`
 Returns a JSON object showing the count of each species across all locations.
