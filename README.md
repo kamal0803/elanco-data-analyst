@@ -100,11 +100,11 @@ The front-end UI is accessible at `http://127.0.0.1:5000`
 
 ## Future Enhancements (if more time was available)
 - Writing unit tests using pytest for end-to-end testing.
-- Integrating the ML model developed to predict the ticks in upcoming weeks in the backend.
+- Integrating the ML model developed to predict the ticks in upcoming weeks in the backend service.
 - Persistence storage using databases such as PostgreSQL to support larger datasets.
 - Apply more MLOps principles by
   - Setting up a CI/CD pipeline using Github actions to automate workflows.
-  - Package the entire application using Docker, and integrate it with MLFlow by running MLFlow tracking server in Docker.
+  - Package the entire application using Docker, and integrate it with MLFlow by running MLFlow tracking server in Docker. Currently the model runs independently of the service.
   - Deploying the models in the cloud.
 
 ## References
