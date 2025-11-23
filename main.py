@@ -48,8 +48,8 @@ def location_stats_aggregate():
 
     return jsonify(sightings_per_location_aggregate(df))
 
-@app.route("/dashboard-data")
-def dashboard_data():
+@app.route("/trends")
+def trends():
 
     return { "weekly": weekly_trends(df), "monthly": monthly_trends(df),
              "yearly": yearly_trends(df)}
